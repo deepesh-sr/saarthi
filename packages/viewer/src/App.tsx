@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { SpanEvent, Trace } from "@saarthi/core";
-import { layoutWaterfall } from "./layout";
 import { applyEvent, createTraceState, mergeTrace, spansInOrder } from "./reducer";
-import { Waterfall } from "./Waterfall";
+import { TraceView } from "./TraceView";
 
 export function App() {
   const [state, setState] = useState(() => createTraceState());
@@ -23,37 +22,11 @@ export function App() {
     return () => source.close();
   }, []);
 
-  const spans = spansInOrder(state);
-  const layout = useMemo(() => layoutWaterfall(spans), [spans]);
-  const rootSpan = spans.find((span) => span.parentId === null);
-
   return (
-    <div className="app">
-      <header className="header">
-        <strong>Saarthi</strong>
-        <span className="trace">{state.traceId ?? "waiting for a trace…"}</span>
-        <span className={`conn ${connected ? "on" : "off"}`}>
-          {connected ? "live" : "offline"}
-        </span>
-        {rootSpan && <span className="total">{layout.totalMs.toFixed(1)} ms</span>}
-      </header>
-
-      <main className="pane">
-        {layout.boxes.length === 0 ? (
-          <p className="empty">
-            Interact with your app — spans will appear here live.
-          </p>
-        ) : (
-          <Waterfall layout={layout} />
-        )}
-      </main>
-
-      <footer className="legend">
-        <span className="done">done</span>
-        <span className="running">running</span>
-        <span className="waiting">waiting</span>
-        <span className="failed">failed</span>
-      </footer>
-    </div>
+    <TraceView
+      spans={spansInOrder(state)}
+      traceId={state.traceId}
+      connected={connected}
+    />
   );
 }

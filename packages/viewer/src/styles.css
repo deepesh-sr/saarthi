@@ -1,8 +1,10 @@
 :root {
   --bg: #0b0e14;
   --panel: #11151f;
+  --line: #1e2430;
   --text: #cdd6f4;
   --muted: #6c7086;
+  --accent: #cba6f7;
   --done: #a6e3a1;
   --running: #89b4fa;
   --waiting: #9399b2;
@@ -31,7 +33,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  border-bottom: 1px solid #1e2430;
+  border-bottom: 1px solid var(--line);
 }
 
 .header strong {
@@ -55,10 +57,153 @@ body {
   color: var(--muted);
 }
 
+.body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 420px;
+  flex: 0 0 420px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bottleneck {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(203, 166, 247, 0.08);
+  color: var(--accent);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-label {
+  color: var(--muted);
+  width: 44px;
+}
+
+.controls button {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.controls button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.search {
+  background: #0d1119;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.rows {
+  flex: 1;
+  overflow: auto;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  border-bottom: 1px solid rgba(30, 36, 48, 0.6);
+  padding: 6px 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.row.selected {
+  background: rgba(203, 166, 247, 0.14);
+  outline: 1px solid var(--accent);
+}
+
+.row .icon {
+  width: 14px;
+}
+
+.row.status-done .icon {
+  color: var(--done);
+}
+
+.row.status-running .icon {
+  color: var(--running);
+}
+
+.row.status-waiting .icon {
+  color: var(--waiting);
+}
+
+.row.status-failed .icon {
+  color: var(--failed);
+}
+
+.row-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-ms {
+  color: var(--text);
+  width: 76px;
+  text-align: right;
+}
+
+.row-total {
+  color: var(--muted);
+  width: 76px;
+  text-align: right;
+}
+
+.row-file {
+  color: var(--muted);
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
 .pane {
   flex: 1;
   padding: 16px;
   overflow: auto;
+  min-width: 0;
 }
 
 .empty {
@@ -78,6 +223,12 @@ body {
   white-space: nowrap;
   background: #1e2430;
   border: 1px solid #2a3242;
+  cursor: pointer;
+}
+
+.box.selected {
+  outline: 2px solid var(--accent);
+  z-index: 2;
 }
 
 .box-label {
@@ -109,7 +260,7 @@ body {
   display: flex;
   gap: 16px;
   padding: 8px 16px;
-  border-top: 1px solid #1e2430;
+  border-top: 1px solid var(--line);
   color: var(--muted);
 }
 
