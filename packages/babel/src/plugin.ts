@@ -6,17 +6,17 @@ export interface SaarthiPluginOptions {
   root?: string;
 }
 
-const ENTER = "__saarthi_enter";
-const EXIT = "__saarthi_exit";
+const RUN = "__saarthi_run";
 
-type FunctionPath = NodePath<
+type FunctionNode =
   | t.FunctionDeclaration
   | t.FunctionExpression
   | t.ArrowFunctionExpression
   | t.ObjectMethod
   | t.ClassMethod
-  | t.ClassPrivateMethod
->;
+  | t.ClassPrivateMethod;
+
+type FunctionPath = NodePath<FunctionNode>;
 
 const VISITOR_KEY =
   "FunctionDeclaration|FunctionExpression|ArrowFunctionExpression|ObjectMethod|ClassMethod|ClassPrivateMethod";
@@ -35,58 +35,99 @@ export default function saarthiPlugin(
   };
 }
 
-function instrument(path: FunctionPath, state: PluginPass, options: SaarthiPluginOptions): void {
+function instrument(
+  path: FunctionPath,
+  state: PluginPass,
+  options: SaarthiPluginOptions,
+): void {
   const node = path.node;
   const body = node.body;
   if (!t.isBlockStatement(body) && !t.isExpression(body)) return;
   if ((node as { __saarthi?: boolean }).__saarthi) return;
   (node as { __saarthi?: boolean }).__saarthi = true;
 
+  if (node.generator) {
+    debug("babel", "skip-generator", { type: node.type });
+    return;
+  }
+
   const name = resolveName(path);
   const file = resolveFile(state, options);
   const line = node.loc?.start.line ?? 0;
-  debug("babel", "instrument", { name, file, line, type: node.type });
 
-  const sid = path.scope.generateUidIdentifier("saarthi_sid");
-  const err = path.scope.generateUidIdentifier("saarthi_err");
-  const caughtParam = path.scope.generateUidIdentifier("saarthi_e");
+  if (t.isBlockStatement(body) && declaresParamWithVar(node, body)) {
+    debug("babel", "skip-var-param", { name, file, line });
+    return;
+  }
 
-  const statements: t.Statement[] = t.isBlockStatement(body)
-    ? body.body
+  debug("babel", "instrument", {
+    name,
+    file,
+    line,
+    type: node.type,
+    async: Boolean(node.async),
+  });
+
+  const statements = t.isBlockStatement(body)
+    ? [...body.body]
     : [t.returnStatement(body)];
+  const directives = t.isBlockStatement(body) ? body.directives : [];
 
-  const enterDecl = t.variableDeclaration("const", [
-    t.variableDeclarator(
-      sid,
-      t.callExpression(t.identifier(ENTER), [
-        t.stringLiteral(name),
-        t.stringLiteral(file),
-        t.numericLiteral(line),
-      ]),
-    ),
-  ]);
-
-  const errDecl = t.variableDeclaration("let", [t.variableDeclarator(err)]);
-
-  const catchClause = t.catchClause(
-    caughtParam,
-    t.blockStatement([
-      t.expressionStatement(t.assignmentExpression("=", err, caughtParam)),
-      t.throwStatement(caughtParam),
-    ]),
-  );
-
-  const finallyBlock = t.blockStatement([
-    t.expressionStatement(t.callExpression(t.identifier(EXIT), [sid, err])),
-  ]);
-
-  const tryStmt = t.tryStatement(
+  const wrapper = t.arrowFunctionExpression(
+    [],
     t.blockStatement(statements),
-    catchClause,
-    finallyBlock,
+    Boolean(node.async),
   );
+  (wrapper as { __saarthi?: boolean }).__saarthi = true;
 
-  node.body = t.blockStatement([enterDecl, errDecl, tryStmt]);
+  const call = t.callExpression(t.identifier(RUN), [
+    t.stringLiteral(name),
+    t.stringLiteral(file),
+    t.numericLiteral(line),
+    wrapper,
+  ]);
+
+  const outer = t.blockStatement([t.returnStatement(call)]);
+  outer.directives = directives;
+  node.body = outer;
+}
+
+function declaresParamWithVar(node: FunctionNode, body: t.BlockStatement): boolean {
+  const params = (node as { params?: Array<t.Node> }).params ?? [];
+  const names = new Set<string>();
+  for (const param of params) collectPatternNames(param, names);
+  if (names.size === 0) return false;
+
+  for (const statement of body.body) {
+    if (!t.isVariableDeclaration(statement) || statement.kind !== "var") continue;
+    for (const declaration of statement.declarations) {
+      const declared = new Set<string>();
+      collectPatternNames(declaration.id, declared);
+      for (const candidate of declared) {
+        if (names.has(candidate)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function collectPatternNames(node: t.Node, names: Set<string>): void {
+  if (t.isIdentifier(node)) {
+    names.add(node.name);
+  } else if (t.isObjectPattern(node)) {
+    for (const property of node.properties) {
+      if (t.isObjectProperty(property)) collectPatternNames(property.value, names);
+      else if (t.isRestElement(property)) collectPatternNames(property.argument, names);
+    }
+  } else if (t.isArrayPattern(node)) {
+    for (const element of node.elements) {
+      if (element) collectPatternNames(element, names);
+    }
+  } else if (t.isAssignmentPattern(node)) {
+    collectPatternNames(node.left, names);
+  } else if (t.isRestElement(node)) {
+    collectPatternNames(node.argument, names);
+  }
 }
 
 function resolveName(path: FunctionPath): string {
@@ -139,9 +180,9 @@ function keyName(key: t.Node): string {
 function memberName(node: t.Node): string {
   if (t.isIdentifier(node)) return node.name;
   if (t.isMemberExpression(node) || t.isOptionalMemberExpression(node)) {
-    const obj = memberName(node.object);
-    const prop = node.computed ? "…" : memberName(node.property);
-    return obj ? `${obj}.${prop}` : prop;
+    const object = memberName(node.object);
+    const property = node.computed ? "…" : memberName(node.property);
+    return object ? `${object}.${property}` : property;
   }
   return "anonymous";
 }
