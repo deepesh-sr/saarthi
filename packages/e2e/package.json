@@ -1,0 +1,16 @@
+{
+  "name": "@sarathi/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "End-to-end intent tests for Sarathi milestones.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@sarathi/core": "workspace:*",
+    "@sarathi/next": "workspace:*",
+    "sarathi": "workspace:*"
+  }
+}

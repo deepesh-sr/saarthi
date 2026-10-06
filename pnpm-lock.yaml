@@ -21,6 +21,8 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.20.5)
 
+  examples/todo-app: {}
+
   packages/babel:
     dependencies:
       '@babel/core':
@@ -35,10 +37,10 @@ importers:
       '@babel/types':
         specifier: ^7.26.3
         version: 7.29.8
-    devDependencies:
       '@sarathi/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -57,14 +59,33 @@ importers:
 
   packages/core: {}
 
+  packages/e2e:
+    devDependencies:
+      '@sarathi/core':
+        specifier: workspace:*
+        version: link:../core
+      '@sarathi/next':
+        specifier: workspace:*
+        version: link:../next
+      sarathi:
+        specifier: workspace:*
+        version: link:../cli
+
   packages/next:
     dependencies:
+      '@babel/core':
+        specifier: ^7.26.0
+        version: 7.29.7
       '@sarathi/babel':
         specifier: workspace:*
         version: link:../babel
       '@sarathi/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
+      '@types/babel__core':
+        specifier: ^7.20.5
+        version: 7.20.5
 
   packages/viewer:
     dependencies:
