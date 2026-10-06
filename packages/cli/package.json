@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@sarathi/core": "workspace:*",
-    "@sarathi/next": "workspace:*"
+    "@sarathi/next": "workspace:*",
+    "@sarathi/viewer": "workspace:*"
   }
 }
