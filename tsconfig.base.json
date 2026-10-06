@@ -4,6 +4,14 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "lib": ["ES2022"],
+    "baseUrl": ".",
+    "paths": {
+      "@sarathi/core": ["packages/core/src/index.ts"],
+      "@sarathi/babel": ["packages/babel/src/index.ts"],
+      "@sarathi/next": ["packages/next/src/index.ts"],
+      "@sarathi/viewer": ["packages/viewer/src/index.ts"],
+      "sarathi": ["packages/cli/src/index.ts"]
+    },
     "strict": true,
     "declaration": true,
     "declarationMap": true,

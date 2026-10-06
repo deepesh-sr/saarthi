@@ -1,5 +1,6 @@
 import * as t from "@babel/types";
 import type { NodePath, PluginObj, PluginPass } from "@babel/core";
+import { debug } from "@sarathi/core";
 
 export interface SarathiPluginOptions {
   root?: string;
@@ -44,6 +45,7 @@ function instrument(path: FunctionPath, state: PluginPass, options: SarathiPlugi
   const name = resolveName(path);
   const file = resolveFile(state, options);
   const line = node.loc?.start.line ?? 0;
+  debug("babel", "instrument", { name, file, line, type: node.type });
 
   const sid = path.scope.generateUidIdentifier("sarathi_sid");
   const err = path.scope.generateUidIdentifier("sarathi_err");
