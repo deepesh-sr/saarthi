@@ -1,6 +1,6 @@
 # plan.md
 
-**Sarathi — web-search fact plan.**
+**Saarthi — web-search fact plan.**
 
 This is a *research* plan, not an engineering plan (that lives in `AGENTS.md`).
 Before writing code for each milestone, we verify the risky assumptions below
@@ -103,7 +103,7 @@ Status: `TODO` | `WIP` | `DONE` | `N/A`.
 
 ### R4. Zero-config dev wrapper mechanics
 
-- **Goal:** confirm `npx sarathi dev` can wrap `next dev` and inject both a
+- **Goal:** confirm `npx saarthi dev` can wrap `next dev` and inject both a
   server require-hook and a client webpack loader with no user edits.
 - **Queries:**
   - `next dev custom webpack config from cli programmatically`
@@ -228,7 +228,7 @@ Status: `TODO` | `WIP` | `DONE` | `N/A`.
 
 ### R11. Distribution & packaging
 
-- **Goal:** ship `npx sarathi dev` and `@sarathi/next` cleanly.
+- **Goal:** ship `npx saarthi dev` and `@saarthi/next` cleanly.
 - **Queries:**
   - `pnpm workspace publish multiple packages`
   - `npx package bin executable typescript build`
@@ -332,7 +332,7 @@ list in `AGENTS.md` into concrete tasks with interfaces and acceptance criteria.
 | `babel` | AST transform only | emit or transport spans |
 | `next` | wiring: webpack loader, server require-hook, dev endpoint, transport | contain trace logic |
 | `viewer` | rendering only, consumes the span schema | instrument anything |
-| `cli` | `sarathi dev`, process wiring, opens report | duplicate `next` logic |
+| `cli` | `saarthi dev`, process wiring, opens report | duplicate `next` logic |
 
 ## Core interfaces (draft — refine after research)
 
@@ -376,8 +376,8 @@ Tasks:
 2. `babel`: transform handling every function-like node (see R1), injecting
    `try/finally` so `__exit` always fires; skip non-app code (R2).
 3. `next`: server-side `--require` hook that transforms app modules on load.
-4. `cli`: `sarathi dev` wrapper that sets the hook and runs `next dev`.
-5. Dump a `trace.json` per request to `.sarathi/`.
+4. `cli`: `saarthi dev` wrapper that sets the hook and runs `next dev`.
+5. Dump a `trace.json` per request to `.saarthi/`.
 
 Acceptance criteria:
 - A real Next.js route with nested function calls produces a valid `trace.json`.
@@ -439,7 +439,7 @@ Tasks:
 1. `viewer`: React Flow call-graph mode; edges labeled with time + status.
 2. Bottleneck banner finalized.
 3. Self-contained `report.html` export (inline data + viewer).
-4. `cli`: `sarathi report` to open a saved trace.
+4. `cli`: `saarthi report` to open a saved trace.
 
 Acceptance criteria:
 - Toggle between race and flow on the same trace.

@@ -6,7 +6,7 @@ import {
 } from "node:http";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { extname, join, normalize, resolve } from "node:path";
-import { debug, type Tracer } from "@sarathi/core";
+import { debug, type Tracer } from "@saarthi/core";
 
 export interface ViewerServerOptions {
   tracer: Tracer;
@@ -123,7 +123,7 @@ function serveStatic(
 
 function serveFallback(res: ServerResponse, tracer: Tracer): void {
   const html = `<!doctype html>
-<html><head><meta charset="utf-8"><title>Sarathi</title>
+<html><head><meta charset="utf-8"><title>Saarthi</title>
 <style>
 body{background:#0b0e14;color:#cdd6f4;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin:0;padding:16px}
 h1{font-size:14px;font-weight:600;margin:0 0 12px}
@@ -133,7 +133,7 @@ h1{font-size:14px;font-weight:600;margin:0 0 12px}
 .file{color:#6c7086}
 .done{color:#a6e3a1}.running{color:#89b4fa}.waiting{color:#9399b2}.failed{color:#f38ba8}
 </style></head><body>
-<h1>Sarathi — live trace <span id="t"></span></h1>
+<h1>Saarthi — live trace <span id="t"></span></h1>
 <div id="rows"></div>
 <script>
 const rows=document.getElementById('rows');

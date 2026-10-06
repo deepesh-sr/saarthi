@@ -2,8 +2,8 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import Module from "node:module";
 import { dirname, resolve, sep } from "node:path";
-import { register, startViewerServer, type ViewerServer } from "@sarathi/next";
-import { debug, Tracer, type Trace } from "@sarathi/core";
+import { register, startViewerServer, type ViewerServer } from "@saarthi/next";
+import { debug, Tracer, type Trace } from "@saarthi/core";
 
 export interface DevOptions {
   entry: string;
@@ -32,14 +32,14 @@ export interface StartDevResult {
 
 export function runDev(options: DevOptions): DevResult {
   const root = resolve(options.root ?? process.cwd());
-  const outDir = resolve(options.outDir ?? resolve(root, ".sarathi"));
+  const outDir = resolve(options.outDir ?? resolve(root, ".saarthi"));
   const entry = resolve(root, options.entry);
   debug("cli", "runDev", { root, entry, outDir, fresh: options.fresh ?? false });
 
   if (options.fresh) clearCache(root);
 
   const tracer = register({ root, tracer: options.tracer });
-  const requireFromRoot = createRequire(resolve(root, "__sarathi_entry__.js"));
+  const requireFromRoot = createRequire(resolve(root, "__saarthi_entry__.js"));
   requireFromRoot(entry);
 
   const trace = tracer.snapshot();
@@ -68,7 +68,7 @@ export async function startDev(
 function resolveViewerDir(): string | undefined {
   try {
     const require = createRequire(import.meta.url);
-    const pkg = require.resolve("@sarathi/viewer/package.json");
+    const pkg = require.resolve("@saarthi/viewer/package.json");
     const dir = resolve(dirname(pkg), "dist/app");
     return existsSync(dir) ? dir : undefined;
   } catch {

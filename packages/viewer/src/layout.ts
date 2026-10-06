@@ -1,4 +1,4 @@
-import type { Span, SpanStatus } from "@sarathi/core";
+import type { Span, SpanStatus } from "@saarthi/core";
 
 export interface WaterfallBox {
   id: string;

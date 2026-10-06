@@ -1,24 +1,24 @@
 import { transformSync } from "@babel/core";
 import { describe, expect, it } from "vitest";
-import { Tracer, installRuntime, uninstallRuntime } from "@sarathi/core";
-import sarathiPlugin from "./plugin";
+import { Tracer, installRuntime, uninstallRuntime } from "@saarthi/core";
+import saarthiPlugin from "./plugin";
 
 function transform(code: string, filename = "app.ts"): string {
   const result = transformSync(code, {
     filename,
     configFile: false,
     babelrc: false,
-    plugins: [[sarathiPlugin, { root: "/proj" }]],
+    plugins: [[saarthiPlugin, { root: "/proj" }]],
     parserOpts: { plugins: ["typescript"] },
   });
   return result!.code!;
 }
 
-describe("sarathi babel plugin", () => {
+describe("saarthi babel plugin", () => {
   it("wraps a function body with enter/exit inside try/finally", () => {
     const out = transform("function foo() { return 1; }", "/proj/src/app.ts");
-    expect(out).toContain("__sarathi_enter");
-    expect(out).toContain("__sarathi_exit");
+    expect(out).toContain("__saarthi_enter");
+    expect(out).toContain("__saarthi_exit");
     expect(out).toContain("try");
     expect(out).toContain("finally");
   });
@@ -80,7 +80,7 @@ describe("sarathi babel plugin", () => {
 
   it("does not instrument functions twice when applied once", () => {
     const out = transform("function foo() { return 1; }", "/proj/src/a.ts");
-    const count = out.match(/__sarathi_enter/g)?.length ?? 0;
+    const count = out.match(/__saarthi_enter/g)?.length ?? 0;
     expect(count).toBe(1);
   });
 

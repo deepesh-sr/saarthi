@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Span } from "@sarathi/core";
+import type { Span } from "@saarthi/core";
 import { layoutWaterfall } from "./layout";
 
 function span(partial: Partial<Span> & { id: string; name: string }): Span {

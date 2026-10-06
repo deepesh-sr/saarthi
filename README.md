@@ -1,17 +1,17 @@
-# Sarathi
+# Saarthi
 
 **सारथि** — a zero-config, dev-only profiling and tracing tool for vibe-coded
 Next.js / React apps.
 
-> In the Bhagavad Gita, Krishna is Arjuna's *sarathi* — the charioteer who steers
-> him through the battlefield when he is lost. Sarathi is the same for your code:
+> In the Bhagavad Gita, Krishna is Arjuna's *saarthi* — the charioteer who steers
+> him through the battlefield when he is lost. Saarthi is the same for your code:
 > it shows you where your app is going and where it stumbles.
 
 You install one command, use your app, and watch the flowchart build itself in
 real time. No SDK calls, no manual instrumentation.
 
 ```bash
-npx sarathi dev
+npx saarthi dev
 ```
 
 ## What it shows you

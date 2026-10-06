@@ -1,10 +1,10 @@
 {
-  "name": "sarathi",
+  "name": "saarthi",
   "version": "0.0.0",
-  "description": "CLI for Sarathi: `npx sarathi dev`.",
+  "description": "CLI for Saarthi: `npx saarthi dev`.",
   "type": "module",
   "bin": {
-    "sarathi": "./dist/cli.js"
+    "saarthi": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,8 +21,8 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@sarathi/core": "workspace:*",
-    "@sarathi/next": "workspace:*",
-    "@sarathi/viewer": "workspace:*"
+    "@saarthi/core": "workspace:*",
+    "@saarthi/next": "workspace:*",
+    "@saarthi/viewer": "workspace:*"
   }
 }

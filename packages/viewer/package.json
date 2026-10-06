@@ -1,7 +1,7 @@
 {
-  "name": "@sarathi/viewer",
+  "name": "@saarthi/viewer",
   "version": "0.0.0",
-  "description": "Sarathi viewer UI: timing sidebar + race/waterfall + flow.",
+  "description": "Saarthi viewer UI: timing sidebar + race/waterfall + flow.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,7 +20,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@sarathi/core": "workspace:*",
+    "@saarthi/core": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

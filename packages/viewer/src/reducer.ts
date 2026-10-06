@@ -1,4 +1,4 @@
-import type { Span, SpanEvent, Trace } from "@sarathi/core";
+import type { Span, SpanEvent, Trace } from "@saarthi/core";
 
 export interface TraceState {
   traceId: string | null;

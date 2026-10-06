@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 export default defineConfig({
   resolve: {
     alias: {
-      "@sarathi/core": resolve(__dirname, "../core/src/index.ts"),
+      "@saarthi/core": resolve(__dirname, "../core/src/index.ts"),
     },
   },
 });

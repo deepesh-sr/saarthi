@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Tracer, type SpanEvent } from "@sarathi/core";
+import { Tracer, type SpanEvent } from "@saarthi/core";
 import { startViewerServer } from "./server";
 
 interface Frame {
@@ -95,7 +95,7 @@ describe("viewer server", () => {
     try {
       const response = await fetch(server.url + "/");
       expect(response.status).toBe(200);
-      expect(await response.text()).toContain("Sarathi");
+      expect(await response.text()).toContain("Saarthi");
     } finally {
       await server.close();
     }

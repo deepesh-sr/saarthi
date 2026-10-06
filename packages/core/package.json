@@ -1,7 +1,7 @@
 {
-  "name": "@sarathi/core",
+  "name": "@saarthi/core",
   "version": "0.0.0",
-  "description": "Span model and trace builder for Sarathi.",
+  "description": "Span model and trace builder for Saarthi.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

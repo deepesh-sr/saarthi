@@ -1,2 +1,2 @@
-export { default as sarathiPlugin } from "./plugin";
-export type { SarathiPluginOptions } from "./plugin";
+export { default as saarthiPlugin } from "./plugin";
+export type { SaarthiPluginOptions } from "./plugin";

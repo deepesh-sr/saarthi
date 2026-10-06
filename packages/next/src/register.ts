@@ -2,8 +2,8 @@ import Module from "node:module";
 import { readFileSync } from "node:fs";
 import { isAbsolute, resolve, sep } from "node:path";
 import { transformSync } from "@babel/core";
-import { sarathiPlugin } from "@sarathi/babel";
-import { debug, installRuntime, Tracer } from "@sarathi/core";
+import { saarthiPlugin } from "@saarthi/babel";
+import { debug, installRuntime, Tracer } from "@saarthi/core";
 
 export interface RegisterOptions {
   root: string;
@@ -27,7 +27,7 @@ export function register(options: RegisterOptions): Tracer {
   const internals = Module as unknown as ModuleInternals;
   const original = internals._extensions[".js"];
   if (!original) {
-    throw new Error("sarathi: could not access Module._extensions['.js']");
+    throw new Error("saarthi: could not access Module._extensions['.js']");
   }
 
   internals._extensions[".js"] = (module, filename) => {
@@ -42,7 +42,7 @@ export function register(options: RegisterOptions): Tracer {
       configFile: false,
       babelrc: false,
       sourceMaps: "inline",
-      plugins: [[sarathiPlugin, { root }]],
+      plugins: [[saarthiPlugin, { root }]],
     });
     (module as unknown as { _compile: (code: string, filename: string) => void })._compile(
       result!.code!,

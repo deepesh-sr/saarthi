@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { SpanEvent, Trace } from "@sarathi/core";
+import type { SpanEvent, Trace } from "@saarthi/core";
 import { layoutWaterfall } from "./layout";
 import { applyEvent, createTraceState, mergeTrace, spansInOrder } from "./reducer";
 import { Waterfall } from "./Waterfall";
@@ -30,7 +30,7 @@ export function App() {
   return (
     <div className="app">
       <header className="header">
-        <strong>Sarathi</strong>
+        <strong>Saarthi</strong>
         <span className="trace">{state.traceId ?? "waiting for a trace…"}</span>
         <span className={`conn ${connected ? "on" : "off"}`}>
           {connected ? "live" : "offline"}

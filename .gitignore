@@ -11,7 +11,7 @@ out/
 *.tsbuildinfo
 
 # Traces / reports (dev artifacts)
-.sarathi/
+.saarthi/
 *.trace.json
 report.html
 

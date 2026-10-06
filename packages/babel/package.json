@@ -1,5 +1,5 @@
 {
-  "name": "@sarathi/babel",
+  "name": "@saarthi/babel",
   "version": "0.0.0",
   "description": "Babel transform that instruments every function with enter/exit.",
   "type": "module",
@@ -22,7 +22,7 @@
     "@babel/parser": "^7.26.3",
     "@babel/traverse": "^7.26.4",
     "@babel/types": "^7.26.3",
-    "@sarathi/core": "workspace:*"
+    "@saarthi/core": "workspace:*"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",

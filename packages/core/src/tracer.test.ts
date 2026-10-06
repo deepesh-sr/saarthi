@@ -143,9 +143,9 @@ describe("Tracer", () => {
     const tracer = new Tracer({ traceId: "t", now: c.now });
     installRuntime(tracer);
     try {
-      const id = globalThis.__sarathi_enter!("handler", "route.ts", 7);
+      const id = globalThis.__saarthi_enter!("handler", "route.ts", 7);
       c.advance(3);
-      globalThis.__sarathi_exit!(id);
+      globalThis.__saarthi_exit!(id);
       const span = tracer.snapshot().spans[0]!;
       expect(span.name).toBe("handler");
       expect(span.file).toBe("route.ts");

@@ -4,15 +4,15 @@ Project context and conventions for AI agents working in this repo.
 
 ## What this is
 
-**Sarathi** — a zero-config, dev-only profiling/tracing tool for vibe-coded
+**Saarthi** — a zero-config, dev-only profiling/tracing tool for vibe-coded
 Next.js/React apps. It auto-instruments every function in the user's own code,
 streams a live trace, and renders it as an interactive race/waterfall plus a
 call-graph so users can see:
 
-> **Name:** *Sarathi* (सारथि) is Sanskrit for "charioteer." In the Bhagavad Gita,
-> Krishna is Arjuna's sarathi — the one who steers him through the battlefield
+> **Name:** *Saarthi* (सारथि) is Sanskrit for "charioteer." In the Bhagavad Gita,
+> Krishna is Arjuna's saarthi — the one who steers him through the battlefield
 > when he is lost. The tool is the same: a guide that shows you where your code
-> is going and where it stumbles. CLI: `npx sarathi dev`.
+> is going and where it stumbles. CLI: `npx saarthi dev`.
 
 - which function ran after which (call flow)
 - how long each function took (speed / lag)
@@ -31,8 +31,8 @@ flowchart build itself in real time. No SDK calls, no manual instrumentation.
   internals render as opaque boundary blocks. Opt-in `--include-deps` for full.
 - **Environment:** dev-only for v1. Production is a later phase (needs sampling,
   privacy controls, and a collector backend).
-- **Install:** `npx sarathi dev` (zero config). Persistent: `npm i -D
-  @sarathi/next` + `withSarathi(nextConfig)`.
+- **Install:** `npx saarthi dev` (zero config). Persistent: `npm i -D
+  @saarthi/next` + `withSaarthi(nextConfig)`.
 
 ## What each span captures
 
@@ -113,9 +113,9 @@ Two panes:
 packages/
   core/     span model + trace builder + JSON schema
   babel/    AST transform: wraps every function with __enter/__exit
-  next/     withSarathi() webpack plugin + server --require hook
+  next/     withSaarthi() webpack plugin + server --require hook
   viewer/   React UI: sidebar + waterfall (D3) + flow (React Flow)
-  cli/      `sarathi dev` wrapper; opens report
+  cli/      `saarthi dev` wrapper; opens report
 ```
 
 ## How capture works
@@ -128,7 +128,7 @@ packages/
 - Errors: if a wrapped function throws, mark it `failed`, record the error, and
   re-throw so app behavior is unchanged. If a caller catches it, the caller stays
   `done` while the child stays `failed` — showing where the failure was absorbed.
-- Only active when `SARATHI=1` / dev mode. Prod is never touched.
+- Only active when `SAARTHI=1` / dev mode. Prod is never touched.
 
 ## Build order / milestones
 
@@ -160,18 +160,18 @@ packages/
 ## Debug logging
 
 Every function should carry at least one debug log so we can trace our own flow
-while building Sarathi and see exactly where something breaks.
+while building Saarthi and see exactly where something breaks.
 
 - Use the shared `debug(scope, ...args)` helper — never bare `console.log` in a
-  shipped code path. It is gated behind `SARATHI_DEBUG=1`, so normal runs stay
+  shipped code path. It is gated behind `SAARTHI_DEBUG=1`, so normal runs stay
   quiet and overhead-free.
 - Log at entry with the meaningful inputs, and at exit with the outcome
   (status/result/error). Add more logs inside a function when debugging a
   specific problem — one or many, as needed.
 - Scope names match the package: `debug("core", …)`, `debug("babel", …)`,
   `debug("next", …)`, `debug("cli", …)`, `debug("viewer", …)`.
-- Enable during development: `SARATHI_DEBUG=1 pnpm test` or
-  `SARATHI_DEBUG=1 npx sarathi dev`.
+- Enable during development: `SAARTHI_DEBUG=1 pnpm test` or
+  `SAARTHI_DEBUG=1 npx saarthi dev`.
 
 ## Not yet decided
 

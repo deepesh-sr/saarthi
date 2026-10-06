@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { runDev } from "sarathi";
+import { runDev } from "saarthi";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "../../..");
@@ -11,7 +11,7 @@ const fixtureRoot = resolve(repoRoot, "examples/todo-app");
 
 function outDir(name: string): string {
   const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  return resolve(tmpdir(), `sarathi-e2e-${name}-${unique}`);
+  return resolve(tmpdir(), `saarthi-e2e-${name}-${unique}`);
 }
 
 describe("milestone 1 — capture one flow to JSON", () => {

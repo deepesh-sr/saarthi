@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Span, SpanEvent } from "@sarathi/core";
+import type { Span, SpanEvent } from "@saarthi/core";
 import { applyEvent, createTraceState, spansInOrder } from "./reducer";
 
 function span(partial: Partial<Span> & { id: string; name: string }): Span {

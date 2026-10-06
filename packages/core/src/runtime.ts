@@ -6,21 +6,21 @@ export type WaitingFn = (id: string, blockedOn: string) => void;
 
 declare global {
   // eslint-disable-next-line no-var
-  var __sarathi_enter: EnterFn | undefined;
+  var __saarthi_enter: EnterFn | undefined;
   // eslint-disable-next-line no-var
-  var __sarathi_exit: ExitFn | undefined;
+  var __saarthi_exit: ExitFn | undefined;
   // eslint-disable-next-line no-var
-  var __sarathi_waiting: WaitingFn | undefined;
+  var __saarthi_waiting: WaitingFn | undefined;
 }
 
 export function installRuntime(tracer: Tracer): void {
-  globalThis.__sarathi_enter = (name, file, line) => tracer.enter(name, file, line);
-  globalThis.__sarathi_exit = (id, error) => tracer.exit(id, error);
-  globalThis.__sarathi_waiting = (id, blockedOn) => tracer.waiting(id, blockedOn);
+  globalThis.__saarthi_enter = (name, file, line) => tracer.enter(name, file, line);
+  globalThis.__saarthi_exit = (id, error) => tracer.exit(id, error);
+  globalThis.__saarthi_waiting = (id, blockedOn) => tracer.waiting(id, blockedOn);
 }
 
 export function uninstallRuntime(): void {
-  globalThis.__sarathi_enter = undefined;
-  globalThis.__sarathi_exit = undefined;
-  globalThis.__sarathi_waiting = undefined;
+  globalThis.__saarthi_enter = undefined;
+  globalThis.__saarthi_exit = undefined;
+  globalThis.__saarthi_waiting = undefined;
 }

@@ -1,17 +1,17 @@
 {
-  "name": "@sarathi/e2e",
+  "name": "@saarthi/e2e",
   "version": "0.0.0",
   "private": true,
-  "description": "End-to-end intent tests for Sarathi milestones.",
+  "description": "End-to-end intent tests for Saarthi milestones.",
   "type": "module",
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@sarathi/core": "workspace:*",
-    "@sarathi/next": "workspace:*",
-    "@sarathi/viewer": "workspace:*",
-    "sarathi": "workspace:*"
+    "@saarthi/core": "workspace:*",
+    "@saarthi/next": "workspace:*",
+    "@saarthi/viewer": "workspace:*",
+    "saarthi": "workspace:*"
   }
 }

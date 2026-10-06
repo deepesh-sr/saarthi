@@ -1,6 +1,6 @@
 # DOC.md
 
-Reference links for building **Sarathi**. Canonical/stable documentation only.
+Reference links for building **Saarthi**. Canonical/stable documentation only.
 Last verified: 2026-10-06.
 
 > Convention: prefer the official docs root when a deep link may move. When a
@@ -79,6 +79,6 @@ Last verified: 2026-10-06.
 - Callgrind / KCachegrind (call-graph profiling) — https://valgrind.org/docs/manual/cl-manual.html
 - nyc / istanbul (require hook + AST coverage instrumentation) — https://github.com/istanbuljs/nyc
 
-## Related Sarathi docs
+## Related Saarthi docs
 
 - `AGENTS.md` — product spec, decisions, milestones, conventions.

@@ -1,5 +1,5 @@
 {
-  "name": "sarathi-monorepo",
+  "name": "saarthi-monorepo",
   "version": "0.0.0",
   "private": true,
   "description": "Zero-config, dev-only profiling/tracing tool for vibe-coded Next.js/React apps.",

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { debug } from "@sarathi/core";
+import { debug } from "@saarthi/core";
 import { startDev } from "./index";
 
 function readFlag(args: string[], name: string): string | undefined {
@@ -13,7 +13,7 @@ async function main(argv: string[]): Promise<void> {
 
   if (command !== "dev" || !entry) {
     console.error(
-      "usage: sarathi dev <entry-file> [--root <dir>] [--out <dir>] [--port <n>] [--no-ui]",
+      "usage: saarthi dev <entry-file> [--root <dir>] [--out <dir>] [--port <n>] [--no-ui]",
     );
     process.exitCode = 1;
     return;
@@ -30,9 +30,9 @@ async function main(argv: string[]): Promise<void> {
   });
 
   if (server) {
-    console.log(`sarathi: viewer at ${server.url}`);
+    console.log(`saarthi: viewer at ${server.url}`);
   }
-  console.log(`sarathi: captured ${result.trace.spans.length} spans -> ${result.file}`);
+  console.log(`saarthi: captured ${result.trace.spans.length} spans -> ${result.file}`);
 
   if (server) {
     const shutdown = async () => {
@@ -45,6 +45,6 @@ async function main(argv: string[]): Promise<void> {
 }
 
 main(process.argv.slice(2)).catch((error) => {
-  console.error("sarathi: failed", error);
+  console.error("saarthi: failed", error);
   process.exitCode = 1;
 });

@@ -1,13 +1,13 @@
 import * as t from "@babel/types";
 import type { NodePath, PluginObj, PluginPass } from "@babel/core";
-import { debug } from "@sarathi/core";
+import { debug } from "@saarthi/core";
 
-export interface SarathiPluginOptions {
+export interface SaarthiPluginOptions {
   root?: string;
 }
 
-const ENTER = "__sarathi_enter";
-const EXIT = "__sarathi_exit";
+const ENTER = "__saarthi_enter";
+const EXIT = "__saarthi_exit";
 
 type FunctionPath = NodePath<
   | t.FunctionDeclaration
@@ -21,12 +21,12 @@ type FunctionPath = NodePath<
 const VISITOR_KEY =
   "FunctionDeclaration|FunctionExpression|ArrowFunctionExpression|ObjectMethod|ClassMethod|ClassPrivateMethod";
 
-export default function sarathiPlugin(
+export default function saarthiPlugin(
   _babel: unknown,
-  options: SarathiPluginOptions = {},
+  options: SaarthiPluginOptions = {},
 ): PluginObj {
   return {
-    name: "sarathi",
+    name: "saarthi",
     visitor: {
       [VISITOR_KEY](path: NodePath, state: PluginPass) {
         instrument(path as FunctionPath, state, options);
@@ -35,21 +35,21 @@ export default function sarathiPlugin(
   };
 }
 
-function instrument(path: FunctionPath, state: PluginPass, options: SarathiPluginOptions): void {
+function instrument(path: FunctionPath, state: PluginPass, options: SaarthiPluginOptions): void {
   const node = path.node;
   const body = node.body;
   if (!t.isBlockStatement(body) && !t.isExpression(body)) return;
-  if ((node as { __sarathi?: boolean }).__sarathi) return;
-  (node as { __sarathi?: boolean }).__sarathi = true;
+  if ((node as { __saarthi?: boolean }).__saarthi) return;
+  (node as { __saarthi?: boolean }).__saarthi = true;
 
   const name = resolveName(path);
   const file = resolveFile(state, options);
   const line = node.loc?.start.line ?? 0;
   debug("babel", "instrument", { name, file, line, type: node.type });
 
-  const sid = path.scope.generateUidIdentifier("sarathi_sid");
-  const err = path.scope.generateUidIdentifier("sarathi_err");
-  const caughtParam = path.scope.generateUidIdentifier("sarathi_e");
+  const sid = path.scope.generateUidIdentifier("saarthi_sid");
+  const err = path.scope.generateUidIdentifier("saarthi_err");
+  const caughtParam = path.scope.generateUidIdentifier("saarthi_e");
 
   const statements: t.Statement[] = t.isBlockStatement(body)
     ? body.body
@@ -146,7 +146,7 @@ function memberName(node: t.Node): string {
   return "anonymous";
 }
 
-function resolveFile(state: PluginPass, options: SarathiPluginOptions): string {
+function resolveFile(state: PluginPass, options: SaarthiPluginOptions): string {
   const filename = state.filename ?? "";
   const root = options.root ?? process.cwd();
   if (filename.startsWith(root)) {

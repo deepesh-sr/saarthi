@@ -3,14 +3,14 @@ import Module from "node:module";
 import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { register, startViewerServer } from "@sarathi/next";
-import { Tracer, type Span, type SpanEvent } from "@sarathi/core";
+import { register, startViewerServer } from "@saarthi/next";
+import { Tracer, type Span, type SpanEvent } from "@saarthi/core";
 import {
   applyEvent,
   createTraceState,
   layoutWaterfall,
   spansInOrder,
-} from "@sarathi/viewer";
+} from "@saarthi/viewer";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "../../..");

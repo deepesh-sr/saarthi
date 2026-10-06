@@ -6,11 +6,11 @@
     "lib": ["ES2022"],
     "baseUrl": ".",
     "paths": {
-      "@sarathi/core": ["packages/core/src/index.ts"],
-      "@sarathi/babel": ["packages/babel/src/index.ts"],
-      "@sarathi/next": ["packages/next/src/index.ts"],
-      "@sarathi/viewer": ["packages/viewer/src/index.ts"],
-      "sarathi": ["packages/cli/src/index.ts"]
+      "@saarthi/core": ["packages/core/src/index.ts"],
+      "@saarthi/babel": ["packages/babel/src/index.ts"],
+      "@saarthi/next": ["packages/next/src/index.ts"],
+      "@saarthi/viewer": ["packages/viewer/src/index.ts"],
+      "saarthi": ["packages/cli/src/index.ts"]
     },
     "strict": true,
     "declaration": true,

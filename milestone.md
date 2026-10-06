@@ -1,6 +1,6 @@
 # milestone.md
 
-Execution milestones for **Sarathi**. This file divides the engineering plan
+Execution milestones for **Saarthi**. This file divides the engineering plan
 (`plan.md` Part 2) into shippable phases.
 
 **Rule for every milestone:** done means an **end-to-end test proves the intent**
@@ -24,12 +24,12 @@ examples/todo-app/          # a real Next.js App Router app (the "host app")
     db.ts                   # insert (slow), findUser, failingQuery
 ```
 
-- The host app is **never** edited by the developer to use Sarathi (that's the
+- The host app is **never** edited by the developer to use Saarthi (that's the
   zero-config promise) — all wiring is injected by the tool.
-- E2E driver: Playwright (headless browser) + Node to run `sarathi dev` and
+- E2E driver: Playwright (headless browser) + Node to run `saarthi dev` and
   inspect emitted artifacts.
 - Assertions run against: the streamed spans the viewer receives, and/or
-  `.sarathi/trace-*.json`.
+  `.saarthi/trace-*.json`.
 - A test must assert **structure and meaning** (who called whom, timing order,
   status), not just "a file exists."
 
@@ -38,11 +38,11 @@ Test command shape: `pnpm --filter e2e test -- milestone-<n>`.
 ### Debug logging (all milestones)
 
 Every function we write carries at least one `debug(scope, …)` log (gated by
-`SARATHI_DEBUG=1`), so when an E2E assertion fails we can see the exact call path
+`SAARTHI_DEBUG=1`), so when an E2E assertion fails we can see the exact call path
 and state that produced it. A failing E2E run should be reproducible with:
 
 ```
-SARATHI_DEBUG=1 pnpm --filter e2e test -- milestone-<n>
+SAARTHI_DEBUG=1 pnpm --filter e2e test -- milestone-<n>
 ```
 
 and the debug output should be enough to localize the failure without a
@@ -52,15 +52,15 @@ debugger. If it isn't, that's a signal to add more logs — not to guess.
 
 ## Milestone 1 — Capture one flow to JSON
 
-**Intent:** prove that Sarathi can auto-instrument an untouched Next.js app and
+**Intent:** prove that Saarthi can auto-instrument an untouched Next.js app and
 produce a truthful nested trace of one request, server-side, with no UI.
 
 **Built:** `core` span/trace model, `babel` transform, `next` server require-hook,
-`cli` `sarathi dev`, JSON dump to `.sarathi/`.
+`cli` `saarthi dev`, JSON dump to `.saarthi/`.
 
 ### E2E workflow
 
-1. Start the fixture app via `npx sarathi dev` (no app edits).
+1. Start the fixture app via `npx saarthi dev` (no app edits).
 2. Trigger the `handleSignup` server action with a known input.
 3. Wait for the trace artifact to be written.
 4. Load and inspect the JSON.
@@ -218,7 +218,7 @@ under load.
 truth as the live race view, and that the report is self-contained.
 
 **Built:** React Flow flow mode, final bottleneck banner, `report.html` export,
-`sarathi report`.
+`saarthi report`.
 
 ### E2E workflow
 
@@ -231,7 +231,7 @@ truth as the live race view, and that the report is self-contained.
   the graph topology matches the trace's parent-child edges exactly.
 - Toggling views keeps the same trace and the same bottleneck.
 - `report.html` opens offline and renders identical data to the live view.
-- `sarathi report <file>` opens a saved trace correctly.
+- `saarthi report <file>` opens a saved trace correctly.
 
 ### Must fail if
 

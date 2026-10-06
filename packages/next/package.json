@@ -1,7 +1,7 @@
 {
-  "name": "@sarathi/next",
+  "name": "@saarthi/next",
   "version": "0.0.0",
-  "description": "Next.js integration: server require-hook and dev transport for Sarathi.",
+  "description": "Next.js integration: server require-hook and dev transport for Saarthi.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.26.0",
-    "@sarathi/babel": "workspace:*",
-    "@sarathi/core": "workspace:*"
+    "@saarthi/babel": "workspace:*",
+    "@saarthi/core": "workspace:*"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5"

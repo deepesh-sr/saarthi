@@ -37,7 +37,7 @@ importers:
       '@babel/types':
         specifier: ^7.26.3
         version: 7.29.8
-      '@sarathi/core':
+      '@saarthi/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -50,13 +50,13 @@ importers:
 
   packages/cli:
     dependencies:
-      '@sarathi/core':
+      '@saarthi/core':
         specifier: workspace:*
         version: link:../core
-      '@sarathi/next':
+      '@saarthi/next':
         specifier: workspace:*
         version: link:../next
-      '@sarathi/viewer':
+      '@saarthi/viewer':
         specifier: workspace:*
         version: link:../viewer
 
@@ -64,16 +64,16 @@ importers:
 
   packages/e2e:
     devDependencies:
-      '@sarathi/core':
+      '@saarthi/core':
         specifier: workspace:*
         version: link:../core
-      '@sarathi/next':
+      '@saarthi/next':
         specifier: workspace:*
         version: link:../next
-      '@sarathi/viewer':
+      '@saarthi/viewer':
         specifier: workspace:*
         version: link:../viewer
-      sarathi:
+      saarthi:
         specifier: workspace:*
         version: link:../cli
 
@@ -82,10 +82,10 @@ importers:
       '@babel/core':
         specifier: ^7.26.0
         version: 7.29.7
-      '@sarathi/babel':
+      '@saarthi/babel':
         specifier: workspace:*
         version: link:../babel
-      '@sarathi/core':
+      '@saarthi/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -95,7 +95,7 @@ importers:
 
   packages/viewer:
     dependencies:
-      '@sarathi/core':
+      '@saarthi/core':
         specifier: workspace:*
         version: link:../core
       react:
