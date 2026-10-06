@@ -35,6 +35,19 @@ examples/todo-app/          # a real Next.js App Router app (the "host app")
 
 Test command shape: `pnpm --filter e2e test -- milestone-<n>`.
 
+### Debug logging (all milestones)
+
+Every function we write carries at least one `debug(scope, …)` log (gated by
+`SARATHI_DEBUG=1`), so when an E2E assertion fails we can see the exact call path
+and state that produced it. A failing E2E run should be reproducible with:
+
+```
+SARATHI_DEBUG=1 pnpm --filter e2e test -- milestone-<n>
+```
+
+and the debug output should be enough to localize the failure without a
+debugger. If it isn't, that's a signal to add more logs — not to guess.
+
 ---
 
 ## Milestone 1 — Capture one flow to JSON

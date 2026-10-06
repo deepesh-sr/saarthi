@@ -157,6 +157,22 @@ packages/
 - Keep prod builds completely free of instrumentation code (compile-time gate).
 - Prefer the OpenTelemetry span shape for anything on the wire.
 
+## Debug logging
+
+Every function should carry at least one debug log so we can trace our own flow
+while building Sarathi and see exactly where something breaks.
+
+- Use the shared `debug(scope, ...args)` helper — never bare `console.log` in a
+  shipped code path. It is gated behind `SARATHI_DEBUG=1`, so normal runs stay
+  quiet and overhead-free.
+- Log at entry with the meaningful inputs, and at exit with the outcome
+  (status/result/error). Add more logs inside a function when debugging a
+  specific problem — one or many, as needed.
+- Scope names match the package: `debug("core", …)`, `debug("babel", …)`,
+  `debug("next", …)`, `debug("cli", …)`, `debug("viewer", …)`.
+- Enable during development: `SARATHI_DEBUG=1 pnpm test` or
+  `SARATHI_DEBUG=1 npx sarathi dev`.
+
 ## Not yet decided
 
 - Error grouping / repeat-count (dedupe identical errors).
