@@ -28,3 +28,12 @@ export interface Trace {
   totalMs: number;
   spans: Span[];
 }
+
+export type SpanEventType = "enter" | "exit" | "waiting";
+
+export interface SpanEvent {
+  type: SpanEventType;
+  span: Span;
+}
+
+export type SpanListener = (event: SpanEvent) => void;

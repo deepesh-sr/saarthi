@@ -1,7 +1,7 @@
 import { now as defaultNow, round } from "./clock";
 import { debug } from "./debug";
 import { defaultTraceId } from "./ids";
-import type { Span, SpanError, Trace } from "./types";
+import type { Span, SpanError, SpanEvent, SpanListener, Trace } from "./types";
 
 export interface TracerOptions {
   traceId?: string;
@@ -14,12 +14,13 @@ interface ActiveSpan {
 }
 
 export class Tracer {
-  private readonly traceId: string;
+  readonly traceId: string;
   private readonly clock: () => number;
   private readonly startTime: number;
   private counter = 0;
   private readonly spans: Span[] = [];
   private readonly active = new Map<string, ActiveSpan>();
+  private readonly listeners = new Set<SpanListener>();
   private stack: string[] = [];
 
   constructor(options: TracerOptions = {}) {
@@ -50,6 +51,7 @@ export class Tracer {
     this.spans.push(span);
     this.active.set(id, { span, childrenTotal: 0 });
     this.stack.push(id);
+    this.emit({ type: "enter", span: cloneSpan(span) });
     return id;
   }
 
@@ -71,6 +73,7 @@ export class Tracer {
     span.selfMs = round(span.end - span.start - active.childrenTotal);
     this.active.delete(id);
     debug("core", "exit", { id, status: span.status, selfMs: span.selfMs });
+    this.emit({ type: "exit", span: cloneSpan(span) });
 
     if (span.parentId) {
       const parent = this.active.get(span.parentId);
@@ -84,6 +87,15 @@ export class Tracer {
     active.span.status = "waiting";
     active.span.blockedOn = blockedOn;
     debug("core", "waiting", { id, blockedOn });
+    this.emit({ type: "waiting", span: cloneSpan(active.span) });
+  }
+
+  subscribe(listener: SpanListener): () => void {
+    this.listeners.add(listener);
+    debug("core", "subscribe", { listeners: this.listeners.size });
+    return () => {
+      this.listeners.delete(listener);
+    };
   }
 
   snapshot(): Trace {
@@ -101,6 +113,16 @@ export class Tracer {
 
   private offset(): number {
     return round(this.clock() - this.startTime);
+  }
+
+  private emit(event: SpanEvent): void {
+    for (const listener of this.listeners) {
+      try {
+        listener(event);
+      } catch (error) {
+        debug("core", "listener:error", error);
+      }
+    }
   }
 }
 

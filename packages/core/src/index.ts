@@ -1,4 +1,12 @@
-export type { Span, SpanError, SpanStatus, Trace } from "./types";
+export type {
+  Span,
+  SpanError,
+  SpanStatus,
+  Trace,
+  SpanEvent,
+  SpanEventType,
+  SpanListener,
+} from "./types";
 export { Tracer, toSpanError } from "./tracer";
 export type { TracerOptions } from "./tracer";
 export {

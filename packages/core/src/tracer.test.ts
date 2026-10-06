@@ -98,6 +98,46 @@ describe("Tracer", () => {
     expect(spanA.status).toBe("failed");
   });
 
+  it("streams enter/exit/waiting events to subscribers in order", () => {
+    const c = fakeClock();
+    const tracer = new Tracer({ traceId: "t", now: c.now });
+    const events: string[] = [];
+    const unsubscribe = tracer.subscribe((event) => {
+      events.push(`${event.type}:${event.span.name}`);
+    });
+
+    const a = tracer.enter("outer", "a.ts", 1);
+    const b = tracer.enter("inner", "a.ts", 5);
+    tracer.waiting(b, "db");
+    tracer.exit(b);
+    tracer.exit(a);
+    unsubscribe();
+    tracer.enter("after", "a.ts", 9);
+
+    expect(events).toEqual([
+      "enter:outer",
+      "enter:inner",
+      "waiting:inner",
+      "exit:inner",
+      "exit:outer",
+    ]);
+  });
+
+  it("exposes a live running span before it exits", () => {
+    const c = fakeClock();
+    const tracer = new Tracer({ traceId: "t", now: c.now });
+    const seen: { type: string; status: string }[] = [];
+    tracer.subscribe((event) => {
+      seen.push({ type: event.type, status: event.span.status });
+    });
+
+    const id = tracer.enter("work", "w.ts", 1);
+    tracer.exit(id);
+
+    expect(seen[0]).toEqual({ type: "enter", status: "running" });
+    expect(seen[1]).toEqual({ type: "exit", status: "done" });
+  });
+
   it("exposes enter/exit through the installed runtime globals", () => {
     const c = fakeClock();
     const tracer = new Tracer({ traceId: "t", now: c.now });
