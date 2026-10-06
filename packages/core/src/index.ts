@@ -10,3 +10,4 @@ export {
 } from "./runtime";
 export { now, round } from "./clock";
 export { defaultTraceId } from "./ids";
+export { debug } from "./debug";

@@ -1,4 +1,5 @@
 import { now as defaultNow, round } from "./clock";
+import { debug } from "./debug";
 import { defaultTraceId } from "./ids";
 import type { Span, SpanError, Trace } from "./types";
 
@@ -25,11 +26,13 @@ export class Tracer {
     this.traceId = options.traceId ?? defaultTraceId();
     this.clock = options.now ?? defaultNow;
     this.startTime = this.clock();
+    debug("core", "tracer:init", this.traceId);
   }
 
   enter(name: string, file: string, line: number): string {
     const id = `s${++this.counter}`;
     const parentId = this.stack.length > 0 ? this.stack[this.stack.length - 1]! : null;
+    debug("core", "enter", { id, name, file, line, parentId });
     const span: Span = {
       id,
       parentId,
@@ -67,6 +70,7 @@ export class Tracer {
     }
     span.selfMs = round(span.end - span.start - active.childrenTotal);
     this.active.delete(id);
+    debug("core", "exit", { id, status: span.status, selfMs: span.selfMs });
 
     if (span.parentId) {
       const parent = this.active.get(span.parentId);
@@ -79,12 +83,14 @@ export class Tracer {
     if (!active) return;
     active.span.status = "waiting";
     active.span.blockedOn = blockedOn;
+    debug("core", "waiting", { id, blockedOn });
   }
 
   snapshot(): Trace {
     const spans = this.spans.map(cloneSpan);
     resolveCaught(spans);
     const root = spans.find((s) => s.parentId === null);
+    debug("core", "snapshot", { spans: spans.length, root: root?.id });
     return {
       traceId: this.traceId,
       root: root ? root.id : "",
