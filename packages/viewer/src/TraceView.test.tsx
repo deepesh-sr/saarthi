@@ -108,4 +108,18 @@ describe("TraceView", () => {
     });
     expect(rowIds()).toEqual(["hash"]);
   });
+
+  it("toggles between race and flow views, keeping the trace and bottleneck", () => {
+    render(<TraceView spans={spans} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "flow" }));
+    expect(screen.getAllByTestId("flow-node")).toHaveLength(spans.length);
+    expect(screen.getAllByTestId("flow-edge")).toHaveLength(
+      spans.filter((span) => span.parentId !== null).length,
+    );
+    expect(screen.getByTestId("bottleneck").textContent).toContain("hashPassword");
+
+    fireEvent.click(screen.getByRole("button", { name: "race" }));
+    expect(screen.getAllByTestId("waterfall-box")).toHaveLength(spans.length);
+  });
 });

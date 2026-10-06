@@ -279,3 +279,76 @@ body {
 .legend .failed {
   color: var(--failed);
 }
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.view-toggle button {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.view-toggle button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.flow {
+  display: block;
+}
+
+.flow-node {
+  cursor: pointer;
+}
+
+.flow-node rect {
+  fill: #1e2430;
+  stroke: #2a3242;
+}
+
+.flow-node.status-done rect {
+  fill: rgba(166, 227, 161, 0.25);
+  stroke: var(--done);
+}
+
+.flow-node.status-running rect {
+  fill: rgba(137, 180, 250, 0.25);
+  stroke: var(--running);
+}
+
+.flow-node.status-waiting rect {
+  fill: rgba(147, 153, 178, 0.25);
+  stroke: var(--waiting);
+}
+
+.flow-node.status-failed rect {
+  fill: rgba(243, 139, 168, 0.25);
+  stroke: var(--failed);
+}
+
+.flow-node.selected rect {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.node-name {
+  fill: var(--text);
+  font-size: 12px;
+}
+
+.node-meta {
+  fill: var(--muted);
+  font-size: 10px;
+}
+
+.edge-label {
+  fill: var(--muted);
+  font-size: 10px;
+}
