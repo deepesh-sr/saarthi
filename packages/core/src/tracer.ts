@@ -102,11 +102,13 @@ export class Tracer {
     const spans = this.spans.map(cloneSpan);
     resolveCaught(spans);
     const root = spans.find((s) => s.parentId === null);
-    debug("core", "snapshot", { spans: spans.length, root: root?.id });
+    const maxEnd = spans.reduce((max, span) => Math.max(max, span.end ?? 0), 0);
+    const totalMs = maxEnd > 0 ? round(maxEnd) : this.offset();
+    debug("core", "snapshot", { spans: spans.length, root: root?.id, totalMs });
     return {
       traceId: this.traceId,
       root: root ? root.id : "",
-      totalMs: this.offset(),
+      totalMs,
       spans,
     };
   }
