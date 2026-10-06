@@ -82,3 +82,6 @@ function clearCache(root: string): void {
     if (key.startsWith(root + sep)) delete cache[key];
   }
 }
+
+export { writeReport } from "./report";
+export type { ReportOptions, ReportResult } from "./report";

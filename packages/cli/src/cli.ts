@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { debug } from "@saarthi/core";
 import { startDev } from "./index";
+import { writeReport } from "./report";
 
 function readFlag(args: string[], name: string): string | undefined {
   const index = args.indexOf(name);
@@ -8,12 +9,24 @@ function readFlag(args: string[], name: string): string | undefined {
 }
 
 async function main(argv: string[]): Promise<void> {
-  const [command, entry, ...rest] = argv;
-  debug("cli", "main", { command, entry, rest });
+  const [command, target, ...rest] = argv;
+  debug("cli", "main", { command, target, rest });
 
-  if (command !== "dev" || !entry) {
+  if (command === "report") {
+    if (!target) {
+      console.error("usage: saarthi report <trace.json> [--out <file>]");
+      process.exitCode = 1;
+      return;
+    }
+    const { file } = writeReport({ traceFile: target, out: readFlag(rest, "--out") });
+    console.log(`saarthi: wrote report -> ${file}`);
+    return;
+  }
+
+  if (command !== "dev" || !target) {
     console.error(
-      "usage: saarthi dev <entry-file> [--root <dir>] [--out <dir>] [--port <n>] [--no-ui]",
+      "usage: saarthi dev <entry-file> [--root <dir>] [--out <dir>] [--port <n>] [--no-ui]\n" +
+        "       saarthi report <trace.json> [--out <file>]",
     );
     process.exitCode = 1;
     return;
@@ -21,7 +34,7 @@ async function main(argv: string[]): Promise<void> {
 
   const portFlag = readFlag(rest, "--port");
   const { result, server } = await startDev({
-    entry,
+    entry: target,
     root: readFlag(rest, "--root"),
     outDir: readFlag(rest, "--out"),
     fresh: true,
