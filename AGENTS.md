@@ -122,14 +122,22 @@ packages/
 
 ## How capture works
 
-- Babel AST transform injects `__enter(id, name, file, line)` / `__exit(id, error?)`
-  around every function body in app code (skip `node_modules`).
-- `__enter`/`__exit` push onto a stack, giving correct parent-child nesting.
-- Async context: use Node's `AsyncLocalStorage` on the server to preserve parent
-  across `await` / callbacks. On the client, patch promise boundaries.
+- The Babel transform wraps every function body in app code (skips `node_modules`)
+  as `return __saarthi_run(name, file, line, <async?>() => { …body… })`. The arrow
+  preserves `this`, `arguments`, and `new.target`.
+- `runInSpan()` uses Node's `AsyncLocalStorage` for an **immutable** parent: it
+  reads the current span from the async context, enters the child, and runs the
+  body inside `storage.run(spanId, …)`. The parent travels with the async context
+  across `await`, timers, microtasks, and `Promise.all`, so concurrent flows never
+  cross-talk.
+- A span closes on synchronous return, or when the returned promise settles. An
+  async throw marks the span `failed` and rethrows unchanged.
 - Errors: if a wrapped function throws, mark it `failed`, record the error, and
   re-throw so app behavior is unchanged. If a caller catches it, the caller stays
   `done` while the child stays `failed` — showing where the failure was absorbed.
+- Skipped on purpose: generator functions, and functions where a `var` would
+  shadow a parameter (preserves semantics). Client/browser coverage is
+  Milestone 4b (Next bundler + promise-boundary shim).
 - Only active when `SAARTHI=1` / dev mode. Prod is never touched.
 
 ## Build order / milestones

@@ -166,49 +166,76 @@ least one wrapper, one slow leaf, and one failure.
 
 ---
 
-## Milestone 4 — Async correctness + React/client coverage
+## Milestone 4a — Async correctness (server) — DONE
 
 **Intent:** prove the flowchart is *true* across pauses — the #1 risk. A wrong
 flow is worse than no tool.
 
-**Built:** `AsyncLocalStorage` context manager (server), promise-boundary
-patching (client), RSC/server-action coverage, Strict Mode handling.
+**Built:** immutable async context via Node `AsyncLocalStorage`.
+- The Babel transform now wraps each function body:
+  `return __saarthi_run(name, file, line, <async?>() => { …body… })`.
+- `runInSpan()` reads the parent from the current async context, enters the span,
+  and runs the body inside `storage.run(spanId, …)`, exiting on sync return or
+  when the returned promise settles. The parent is immutable per async context,
+  so concurrent flows cannot contaminate each other.
+- Generators are skipped (documented gap); functions where a `var` would shadow
+  a parameter are skipped to preserve semantics.
 
-### E2E workflow (server)
+### E2E workflow
 
-1. Trigger an action with `await` interleaving: two concurrent async flows
-   (`signupA`, `signupB`) that pause on I/O and resume out of order.
-2. Inspect both traces.
+1. Run `server-concurrent.js`: two flows via `Promise.all` that pause on timers
+   and resume out of order, plus timer and microtask boundaries.
+2. Inspect the trace.
 
-### Intent assertions (server)
+### Intent assertions (all covered by tests)
 
-- Each child reattaches to its **own** parent after resume — no cross-talk
-  between `signupA` and `signupB`.
-- Spans spanning `await`, `setTimeout`, `.then`, and stream callbacks keep
-  correct nesting.
-- Deliberately shuffle completion order → nesting still correct.
-
-### E2E workflow (client)
-
-1. Load the page; trigger a client component + `useEffect` + custom hook flow.
-2. Inspect client spans merged into the same trace.
-
-### Intent assertions (client)
-
-- Component render, hook, and effect spans nest correctly under the user
-  interaction.
-- Strict Mode double-invocation does **not** double-count in a misleading way
-  (either deduped or clearly marked).
-- A client→server-action→back round trip shows one connected tree.
+- Sync nesting, sequential `await`, timer boundary, microtask boundary.
+- Concurrent flows (`Promise.all`) with no cross-talk; each child under its own
+  flow; parallel fan-out children under the same flow.
+- A callee's context does **not** leak into the caller after it returns.
+- Async throw → span `failed` + rethrow; a promise-returning sync function keeps
+  its span open until the promise settles.
+- No orphans under interleaving; every span closed.
 
 ### Must fail if
 
 - A resumed child attaches to the wrong parent or to none.
 - Concurrent flows contaminate each other's context.
-- Client and server produce disconnected trees for one interaction.
+- A callee's context leaks into the caller.
 
-**Exit criteria:** concurrent-async and client/server tests pass; no orphans
-under load.
+**Exit criteria:** met — `packages/core/src/context.test.ts` (9 cases),
+`packages/babel/src/plugin.test.ts` (10 cases), and
+`packages/e2e/src/milestone-4.test.ts` (concurrent real trace).
+
+---
+
+## Milestone 4b — Client / React coverage (Next bundler) — TODO
+
+**Intent:** extend the same truth to the browser: client components, hooks,
+effects, Strict Mode, and a connected client↔server-action tree.
+
+**Built (planned):** a Next webpack/Turbopack loader that runs the same Babel
+transform on client code; a browser context shim (promise-boundary patching,
+since `AsyncLocalStorage` is Node-only); Strict Mode double-invocation handling;
+a shared `traceId` propagated to the server so client and server spans merge.
+
+### E2E workflow
+
+1. Load the page; trigger a client component + `useEffect` + custom hook flow.
+2. Inspect client spans merged into the same trace.
+
+### Intent assertions
+
+- Component render, hook, and effect spans nest correctly under the interaction.
+- Strict Mode double-invocation does not misleadingly double-count.
+- A client→server-action→back round trip shows one connected tree.
+
+### Must fail if
+
+- Client and server produce disconnected trees for one interaction.
+- The browser shim mis-parents concurrent client promises.
+
+**Exit criteria:** client/server E2E pass; one connected tree per interaction.
 
 ---
 
