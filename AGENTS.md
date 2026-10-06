@@ -87,6 +87,8 @@ Two panes:
 - Columns: status icon, total ms, self ms, call count, `file:line`.
 - Filters: only failed / only waiting / only slow / search by name.
 - Click a row to highlight + scroll to that span in the right pane (bidirectional).
+- Default sort is self-time (surfaces the real lag); the `slow` filter uses a
+  self-time threshold (`DEFAULT_SLOW_MS`, 5 ms).
 
 **Right — race pane**
 - **Waterfall mode:** each function is a box; x-position = start offset, width =
