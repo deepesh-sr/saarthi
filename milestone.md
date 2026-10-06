@@ -239,13 +239,15 @@ a shared `traceId` propagated to the server so client and server spans merge.
 
 ---
 
-## Milestone 5 — Flow view + shareable report
+## Milestone 5 — Flow view + shareable report — DONE
 
 **Intent:** prove the call-graph view and the offline report convey the same
 truth as the live race view, and that the report is self-contained.
 
-**Built:** React Flow flow mode, final bottleneck banner, `report.html` export,
-`saarthi report`.
+**Built:** a layered SVG flow view (`buildFlowGraph` + `FlowView`), a race ⇄ flow
+toggle in `TraceView` (same trace + bottleneck), a self-contained `report.html`
+builder (`buildReportHtml`, no external scripts/styles/URLs), and the
+`saarthi report <trace.json>` CLI command.
 
 ### E2E workflow
 

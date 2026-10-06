@@ -93,8 +93,8 @@ Two panes:
 **Right — race pane**
 - **Waterfall mode:** each function is a box; x-position = start offset, width =
   duration, nested by call depth. A playhead scrubs 0 -> 100%.
-- **Flow mode:** React Flow call-graph; nodes = functions, edges = calls,
-  labeled with time and status.
+- **Flow mode:** a layered SVG call-graph; nodes = functions (colored by
+  status), edges = calls labeled with time + status. Same selection sync as race.
 - Color = status: `done` green, `running` blue, `waiting` grey, `failed` red.
 - Auto bottleneck banner: e.g. "hashPassword = 76% of this request".
 
@@ -116,7 +116,7 @@ packages/
   core/     span model + trace builder + JSON schema
   babel/    AST transform: wraps every function with __enter/__exit
   next/     withSaarthi() webpack plugin + server --require hook
-  viewer/   React UI: sidebar + waterfall (D3) + flow (React Flow)
+  viewer/   React UI: sidebar + waterfall + flow (layered SVG)
   cli/      `saarthi dev` wrapper; opens report
 ```
 
