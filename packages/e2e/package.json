@@ -11,6 +11,7 @@
   "devDependencies": {
     "@sarathi/core": "workspace:*",
     "@sarathi/next": "workspace:*",
+    "@sarathi/viewer": "workspace:*",
     "sarathi": "workspace:*"
   }
 }
