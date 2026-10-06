@@ -1,0 +1,25 @@
+{
+  "name": "sarathi-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Zero-config, dev-only profiling/tracing tool for vibe-coded Next.js/React apps.",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "clean": "pnpm -r exec rm -rf dist node_modules/.cache"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

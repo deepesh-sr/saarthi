@@ -1,0 +1,24 @@
+{
+  "name": "@sarathi/next",
+  "version": "0.0.0",
+  "description": "Next.js integration: server require-hook and dev transport for Sarathi.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@sarathi/babel": "workspace:*",
+    "@sarathi/core": "workspace:*"
+  }
+}

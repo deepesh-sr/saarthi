@@ -1,0 +1,27 @@
+{
+  "name": "sarathi",
+  "version": "0.0.0",
+  "description": "CLI for Sarathi: `npx sarathi dev`.",
+  "type": "module",
+  "bin": {
+    "sarathi": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts --format esm --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@sarathi/core": "workspace:*",
+    "@sarathi/next": "workspace:*"
+  }
+}
