@@ -18,7 +18,11 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@babel/core": "^7.26.0",
     "@sarathi/babel": "workspace:*",
     "@sarathi/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5"
   }
 }
