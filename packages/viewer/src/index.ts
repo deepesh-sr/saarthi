@@ -21,3 +21,6 @@ export type {
   SidebarRow,
   SortKey,
 } from "./analysis";
+export { buildFlowGraph } from "./flow";
+export type { FlowEdge, FlowGraph, FlowNode } from "./flow";
+export { buildReportHtml } from "./report";
