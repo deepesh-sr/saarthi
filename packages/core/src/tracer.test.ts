@@ -13,13 +13,13 @@ function fakeClock() {
 }
 
 describe("Tracer", () => {
-  it("nests spans by call order and attributes self-time", () => {
+  it("nests spans by explicit parent and attributes self-time", () => {
     const c = fakeClock();
     const tracer = new Tracer({ traceId: "t", now: c.now });
 
     const a = tracer.enter("handleSignup", "actions.ts", 12);
     c.advance(10);
-    const b = tracer.enter("hashPassword", "auth.ts", 30);
+    const b = tracer.enter("hashPassword", "auth.ts", 30, a);
     c.advance(20);
     tracer.exit(b);
     c.advance(5);
@@ -63,7 +63,7 @@ describe("Tracer", () => {
 
     const a = tracer.enter("caller", "app.ts", 1);
     c.advance(1);
-    const b = tracer.enter("boom", "app.ts", 9);
+    const b = tracer.enter("boom", "app.ts", 9, a);
     c.advance(2);
     tracer.exit(b, new Error("kaboom"));
     tracer.exit(a);
@@ -84,7 +84,7 @@ describe("Tracer", () => {
     const tracer = new Tracer({ traceId: "t", now: c.now });
 
     const a = tracer.enter("root", "app.ts", 1);
-    const b = tracer.enter("boom", "app.ts", 9);
+    const b = tracer.enter("boom", "app.ts", 9, a);
     const err = new Error("kaboom");
     tracer.exit(b, err);
     tracer.exit(a, err);
@@ -107,7 +107,7 @@ describe("Tracer", () => {
     });
 
     const a = tracer.enter("outer", "a.ts", 1);
-    const b = tracer.enter("inner", "a.ts", 5);
+    const b = tracer.enter("inner", "a.ts", 5, a);
     tracer.waiting(b, "db");
     tracer.exit(b);
     tracer.exit(a);
@@ -138,14 +138,13 @@ describe("Tracer", () => {
     expect(seen[1]).toEqual({ type: "exit", status: "done" });
   });
 
-  it("exposes enter/exit through the installed runtime globals", () => {
+  it("runs a function through the installed runtime global", () => {
     const c = fakeClock();
     const tracer = new Tracer({ traceId: "t", now: c.now });
     installRuntime(tracer);
     try {
-      const id = globalThis.__saarthi_enter!("handler", "route.ts", 7);
-      c.advance(3);
-      globalThis.__saarthi_exit!(id);
+      const result = globalThis.__saarthi_run!("handler", "route.ts", 7, () => 42);
+      expect(result).toBe(42);
       const span = tracer.snapshot().spans[0]!;
       expect(span.name).toBe("handler");
       expect(span.file).toBe("route.ts");

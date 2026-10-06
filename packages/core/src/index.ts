@@ -12,10 +12,10 @@ export type { TracerOptions } from "./tracer";
 export {
   installRuntime,
   uninstallRuntime,
-  type EnterFn,
-  type ExitFn,
+  type RunFn,
   type WaitingFn,
 } from "./runtime";
+export { currentSpanId, runInSpan } from "./context";
 export { now, round } from "./clock";
 export { defaultTraceId } from "./ids";
 export { debug } from "./debug";

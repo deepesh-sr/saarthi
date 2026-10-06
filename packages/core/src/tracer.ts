@@ -21,7 +21,6 @@ export class Tracer {
   private readonly spans: Span[] = [];
   private readonly active = new Map<string, ActiveSpan>();
   private readonly listeners = new Set<SpanListener>();
-  private stack: string[] = [];
 
   constructor(options: TracerOptions = {}) {
     this.traceId = options.traceId ?? defaultTraceId();
@@ -30,9 +29,13 @@ export class Tracer {
     debug("core", "tracer:init", this.traceId);
   }
 
-  enter(name: string, file: string, line: number): string {
+  enter(
+    name: string,
+    file: string,
+    line: number,
+    parentId: string | null = null,
+  ): string {
     const id = `s${++this.counter}`;
-    const parentId = this.stack.length > 0 ? this.stack[this.stack.length - 1]! : null;
     debug("core", "enter", { id, name, file, line, parentId });
     const span: Span = {
       id,
@@ -50,7 +53,6 @@ export class Tracer {
     };
     this.spans.push(span);
     this.active.set(id, { span, childrenTotal: 0 });
-    this.stack.push(id);
     this.emit({ type: "enter", span: cloneSpan(span) });
     return id;
   }
@@ -60,9 +62,6 @@ export class Tracer {
     if (!active) return;
 
     const span = active.span;
-    const idx = this.stack.lastIndexOf(id);
-    if (idx >= 0) this.stack.length = idx;
-
     span.end = this.offset();
     if (error !== undefined) {
       span.status = "failed";
