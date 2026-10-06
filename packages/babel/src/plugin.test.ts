@@ -83,4 +83,56 @@ describe("sarathi babel plugin", () => {
     const count = out.match(/__sarathi_enter/g)?.length ?? 0;
     expect(count).toBe(1);
   });
+
+  it("instruments class constructors/methods and object methods", () => {
+    const code = `
+      function helper(pw) { return pw.toUpperCase(); }
+      class Auth {
+        constructor() { this.ready = true; }
+        hash(pw) { return helper(pw); }
+      }
+      const tools = { wrap(pw) { return "[" + pw + "]"; } };
+      new Auth().hash("x");
+      tools.wrap("y");
+    `;
+    const out = transform(code, "/proj/src/klass.ts");
+    const tracer = new Tracer({ traceId: "t" });
+    installRuntime(tracer);
+    try {
+      new Function(out)();
+    } finally {
+      uninstallRuntime();
+    }
+    const names = tracer.snapshot().spans.map((s) => s.name);
+    expect(names).toEqual(
+      expect.arrayContaining(["Auth", "hash", "helper", "wrap"]),
+    );
+    const spans = tracer.snapshot().spans;
+    const hash = spans.find((s) => s.name === "hash")!;
+    const helper = spans.find((s) => s.name === "helper")!;
+    expect(helper.parentId).toBe(hash.id);
+  });
+
+  it("instruments async functions and preserves the awaited result", async () => {
+    const code = `
+      async function inner() { return 1; }
+      async function outer() { const v = await inner(); return v + 1; }
+      globalThis.__asyncResult = outer();
+    `;
+    const out = transform(code, "/proj/src/async.ts");
+    const tracer = new Tracer({ traceId: "t" });
+    installRuntime(tracer);
+    try {
+      new Function(out)();
+      await (globalThis as { __asyncResult?: Promise<number> }).__asyncResult;
+    } finally {
+      uninstallRuntime();
+    }
+    expect(await Promise.resolve(2)).toBe(2);
+    const spans = tracer.snapshot().spans;
+    const inner = spans.find((s) => s.name === "inner")!;
+    const outer = spans.find((s) => s.name === "outer")!;
+    expect(inner.parentId).toBe(outer.id);
+    expect(outer.status).toBe("done");
+  });
 });

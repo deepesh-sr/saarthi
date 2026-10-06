@@ -100,6 +100,16 @@ function resolveName(path: FunctionPath): string {
   }
 
   if (t.isObjectMethod(node) || t.isClassMethod(node) || t.isClassPrivateMethod(node)) {
+    if (t.isClassMethod(node) && node.kind === "constructor") {
+      const classNode = path.parentPath?.parentPath?.node;
+      if (
+        (t.isClassDeclaration(classNode) || t.isClassExpression(classNode)) &&
+        classNode.id
+      ) {
+        return classNode.id.name;
+      }
+      return "constructor";
+    }
     return keyName(node.key);
   }
 
